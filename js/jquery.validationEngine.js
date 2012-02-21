@@ -56,7 +56,7 @@
 
 				// bind fields
 				form.find("["+options.validateAttribute+"*=validate]").not("[type=checkbox]").not("[type=radio]").not(".datepicker").bind(options.validationEventTrigger, methods._onFieldEvent);
-				form.find("["+options.validateAttribute+"*=validate][type=checkbox],[class*=validate][type=radio]").bind("click", methods._onFieldEvent);
+				form.find("["+options.validateAttribute+"*=validate][type=checkbox],["+options.validateAttribute+"*=validate][type=radio]").bind("click", methods._onFieldEvent);
 				form.find("["+options.validateAttribute+"*=validate][class*=datepicker]").bind(options.validationEventTrigger,{"delay": 300}, methods._onFieldEvent);
 			}
 			if (options.autoPositionUpdate) {
@@ -250,8 +250,9 @@
 			var form = $(this);
 			var options = form.data('jqv');
 
-			// validate each field (- skip field ajax validation, no necessary since we will perform an ajax form validation)
-			var r=methods._validateFields(form, true);
+			// validate each field 
+			// (- skip field ajax validation, not necessary IF we will perform an ajax form validation)
+			var r=methods._validateFields(form, options.ajaxFormValidation);
 
 			if (r && options.ajaxFormValidation) {
 				methods._validateFormWithAjax(form, options);
@@ -1242,7 +1243,12 @@
 				// empty relative span does not disturb page layout
 				// prompt positioned absolute to relative span
 				// vertical-align:top so position calculations are the same as isOverflown
-				var outer = $('<span>').css('display','inline-block').css('position','relative').css('vertical-align','top').addClass('formErrorOuter').append(prompt.css('position','absolute'));
+				var outer = $('<div>').css({
+					'position'		:'relative',
+					'display'		:'inline-block',
+					'vertical-align'	:'top'
+				}).addClass('formErrorOuter').append(prompt.css('position','absolute'));
+
 				field.before(outer);
 				if(options.relativePadding) {
 					outer.css('padding-bottom', prompt.height() + 'px');
