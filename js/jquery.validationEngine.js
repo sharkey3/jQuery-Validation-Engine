@@ -1231,14 +1231,18 @@
 			if (field.closest('.ui-dialog').length)
 				prompt.addClass('formErrorInsideDialog');
 
+			var pos = methods._calculatePosition(field, prompt, options);
 			prompt.css({
+				"top": pos.callerTopPosition,
+				"left": pos.callerleftPosition,
+				"marginTop": pos.marginTopSize,
 				"opacity": 0
 			});
 			if (options.relative) {
 				// empty relative span does not disturb page layout
 				// prompt positioned absolute to relative span
 				// vertical-align:top so position calculations are the same as isOverflown
-				var outer = $('<span>').css('position','relative').css('vertical-align','top').addClass('formErrorOuter').append(prompt.css('position','absolute'));
+				var outer = $('<span>').css('display','inline-block').css('position','relative').css('vertical-align','top').addClass('formErrorOuter').append(prompt.css('position','absolute'));
 				field.before(outer);
 				if(options.relativePadding) {
 					outer.css('padding-bottom', prompt.height() + 'px');
